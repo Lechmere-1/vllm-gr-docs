@@ -11,7 +11,7 @@ an independent vLLM-GR documentation edition. Its 30 pages are organized into:
 - CLI Reference: serving, environment checks and repository tools.
 - Community: contact, governance, roadmap and release-note sections.
 
-The first-release main model is `OpenOneRec/OneRec-1.7B` on CUDA and Ascend NPU.
+The main validated example uses `OpenOneRec/OneRec-1.7B` on CUDA and Ascend NPU.
 Pangu is an additional NPU-only guide. Unconfirmed Maintainer/Committer names
 and community plans are intentionally left pending.
 
