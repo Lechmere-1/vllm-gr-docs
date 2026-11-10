@@ -1095,6 +1095,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#supported-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#choose-an-entry-point" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2028,6 +2039,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#supported-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#choose-an-entry-point" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2150,33 +2172,32 @@
 
 
 <h1 id="models-and-capabilities">Models and capabilities<a class="headerlink" href="#models-and-capabilities" title="Permanent link">&para;</a></h1>
-<p>Choose a model and an inference path together. A checkpoint that generates text
-does not automatically contain recommendation SID tokens, a business catalog,
-or trained SID embeddings.</p>
-<p>The first-release main walkthrough covers <strong><code>OpenOneRec/OneRec-1.7B</code></strong> on CUDA
-and Ascend NPU. <strong>Pangu is an additional NPU-only guide.</strong> Other code paths and
-configuration fields below do not expand this edition's model support list.</p>
+<p>vLLM-GR currently supports <strong><code>OpenOneRec/OneRec-1.7B</code></strong>, with support for more
+models on the way.</p>
+<h2 id="supported-models">Supported models<a class="headerlink" href="#supported-models" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Model</th>
-<th>Platform scope in this edition</th>
-<th>Walkthrough</th>
+<th>CUDA GPU</th>
+<th>Ascend NPU</th>
+<th>Get started</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>OpenOneRec/OneRec-1.7B</code></td>
-<td>CUDA and Ascend NPU main model</td>
+<td>Supported</td>
+<td>Supported</td>
 <td><a href="../first-inference/">First inference</a></td>
-</tr>
-<tr>
-<td>Public openPangu Embedded 1B</td>
-<td>Additional Ascend NPU support</td>
-<td><a href="../pangu/">Pangu on NPU</a></td>
 </tr>
 </tbody>
 </table>
+<p>Pangu is available as an additional NPU-specific workflow. See
+<a href="../pangu/">Pangu on NPU</a> for the public checkpoint and SID preparation guide.</p>
+<p>Choose a model and an inference path together. A checkpoint that generates text
+does not automatically contain recommendation SID tokens, a business catalog,
+or trained SID embeddings.</p>
 <p>This guide describes the source snapshot used by this documentation edition,
 <code>c4966f18</code>. A supported code path is not a claim that every checkpoint, device,
 batch shape, or feature combination has passed hardware validation.</p>
