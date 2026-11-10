@@ -514,6 +514,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="first-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First offline inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -634,16 +662,17 @@ explore OneRec Beam Search and catalog-constrained generation.</p>
 </tbody>
 </table>
 <p>The Ascend guide includes the vendor environment, xllm-ops build and
-vLLM-GR installation. Models and recommendation catalogs are downloaded
-separately from the framework.</p>
+vLLM-GR installation. Download model weights separately, then follow
+<a href="first-inference/">First offline inference</a> using the repository's example
+constraint data or your own model-aligned catalog.</p>
 <h2 id="from-installation-to-inference">From installation to inference<a class="headerlink" href="#from-installation-to-inference" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Prepare your runtime.</strong> Follow the GPU or NPU guide and verify the installed
    package versions.</li>
 <li><strong>Prepare the model and catalog.</strong> Use the same model and tokenizer snapshot
    when building the constraint artifact and running inference.</li>
-<li><strong>Run Beam Search V1.</strong> Start with an offline example, or serve requests through
-   the online API.</li>
+<li><strong>Run Beam Search V1.</strong> Follow <a href="first-inference/">First offline inference</a>
+   to run one request and understand the returned SIDs.</li>
 </ol>
 <h2 id="explore-the-repository">Explore the repository<a class="headerlink" href="#explore-the-repository" title="Permanent link">&para;</a></h2>
 <ul>

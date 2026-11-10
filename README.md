@@ -3,15 +3,17 @@
 Public website: https://lechmere-1.github.io/vllm-gr-docs/
 
 This repository hosts the generated HTML, search index and static assets for
-the initial three-page vLLM-GR documentation preview:
+the vLLM-GR documentation preview:
 
 - Home
 - CUDA GPU installation
 - Ascend NPU installation
+- First offline inference (CUDA and Ascend NPU)
 
 The installation guides originate from [JiusiServe/vllm-gr](https://github.com/JiusiServe/vllm-gr)
 at `c4966f18a11a0aca9f05bda2e270c634c342f868`. The preview adds a homepage,
-navigation and styling, and adapts links for a standalone documentation site.
+navigation and styling, adapts links for a standalone documentation site, and
+adds a first-inference tutorial checked against that source revision.
 It is a documentation preview, not a separate release of the inference framework.
 
 Project documentation is distributed under the original Apache-2.0 license;
