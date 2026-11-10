@@ -16,7 +16,7 @@
         <link rel="prev" href="../beam-search-explained/">
       
       
-        <link rel="next" href="../online-serving/">
+        <link rel="next" href="../data-and-constraints/">
       
       
         
@@ -813,6 +813,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../data-and-constraints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data and constraints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../online-serving/" class="md-nav__link">
         
   
@@ -1322,6 +1378,9 @@ requested width. SID components identify a catalog item through the matching
 SID-to-item mapping; they are not natural-language recommendation explanations.
 Scores and rankings are not fixed reference values across devices or batch shapes.</p>
 <h2 id="5-prepare-a-reusable-constraint-table-optional">5. Prepare a reusable Constraint Table (optional)<a class="headerlink" href="#5-prepare-a-reusable-constraint-table-optional" title="Permanent link">&para;</a></h2>
+<p>For the complete catalog-to-artifact workflow, follow
+<a href="../data-and-constraints/">Data and constraints</a>. To use the artifact in your own
+program, continue with <a href="../python-integration/">Python integration</a>.</p>
 <p>For an application that loads a persistent artifact, compile it separately:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>tools/build_constraint_table.py<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--triples<span class="w"> </span><span class="s2">"</span><span class="nv">$CATALOG</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
@@ -1439,13 +1498,13 @@ For the selection and KV flow behind each step, read
         
         
           
-          <a href="../online-serving/" class="md-footer__link md-footer__link--next" aria-label="Next: Online serving">
+          <a href="../data-and-constraints/" class="md-footer__link md-footer__link--next" aria-label="Next: Data and constraints">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Online serving
+                Data and constraints
               </div>
             </div>
             <div class="md-footer__button md-icon">
