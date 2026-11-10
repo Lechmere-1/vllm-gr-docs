@@ -1,0 +1,1560 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Generative recommendation inference on vLLM">
+      
+      
+      
+        <link rel="canonical" href="https://lechmere-1.github.io/vllm-gr-docs/troubleshooting/">
+      
+      
+        <link rel="prev" href="../validation-benchmarking/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Troubleshooting - vLLM-GR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#troubleshooting" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vLLM-GR" class="md-header__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vLLM-GR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Troubleshooting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../beam-search-explained/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../validation-benchmarking/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vLLM-GR" class="md-nav__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    vLLM-GR
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CUDA GPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart-ascend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ascend NPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../beam-search-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam Search explained
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First offline inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../online-serving/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Online serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models-and-capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models and capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam parameters and modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation-benchmarking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation and benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#files-are-missing-or-tee-cannot-create-a-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files are missing or tee cannot create a log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-imports-the-wrong-checkout-or-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python imports the wrong checkout or runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ascend-dependencies-or-custom-operators-fail-to-load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ascend dependencies or custom operators fail to load
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engine-startup-reports-insufficient-free-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine startup reports insufficient free memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#an-argument-is-unknown-or-configuration-sources-conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An argument is unknown or configuration sources conflict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-graph-does-not-replay-or-fallback-counts-increase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A graph does not replay, or fallback counts increase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sid-candidates-scores-or-ranking-differ" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SID candidates, scores, or ranking differ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-requests-or-artifact-validation-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP requests or artifact validation fail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collect-a-small-diagnostic-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect a small diagnostic record
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#files-are-missing-or-tee-cannot-create-a-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files are missing or tee cannot create a log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-imports-the-wrong-checkout-or-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python imports the wrong checkout or runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ascend-dependencies-or-custom-operators-fail-to-load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ascend dependencies or custom operators fail to load
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engine-startup-reports-insufficient-free-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine startup reports insufficient free memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#an-argument-is-unknown-or-configuration-sources-conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An argument is unknown or configuration sources conflict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-graph-does-not-replay-or-fallback-counts-increase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A graph does not replay, or fallback counts increase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sid-candidates-scores-or-ranking-differ" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SID candidates, scores, or ranking differ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-requests-or-artifact-validation-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP requests or artifact validation fail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collect-a-small-diagnostic-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect a small diagnostic record
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
+<p>Start with the first specific error in the engine or Worker log. A final
+<code>Engine core initialization failed</code> message usually summarizes an earlier
+failure. Keep the model, inputs, and command unchanged while isolating one cause.
+Use <a href="../getting-started/">Quickstart</a> for the supported first-run configuration.</p>
+<h2 id="files-are-missing-or-tee-cannot-create-a-log">Files are missing or <code>tee</code> cannot create a log<a class="headerlink" href="#files-are-missing-or-tee-cannot-create-a-log" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FileNotFoundError</code> for a relative catalog or prompt path</td>
+<td>The shell's current directory</td>
+<td>Run the examples from the vllm-gr source repository root.</td>
+</tr>
+<tr>
+<td>Model directory is missing or incomplete</td>
+<td>Local weights, <code>config.json</code>, and tokenizer files</td>
+<td>Download the model separately; the repository does not contain its weights.</td>
+</tr>
+<tr>
+<td><code>tee: ... No such file or directory</code></td>
+<td>The log's parent directory</td>
+<td>Create that directory before running the pipeline.</td>
+</tr>
+<tr>
+<td>Variables work in one terminal but not another</td>
+<td>Variables in the active shell</td>
+<td>Set the paths again in the new terminal, as the online guide does.</td>
+</tr>
+</tbody>
+</table>
+<p>After setting the paths in <a href="../first-inference/">First offline inference</a>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">pwd</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$MODEL</span><span class="s2">/config.json"</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$CATALOG</span><span class="s2">"</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$PROMPT</span><span class="s2">"</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$WORKDIR</span><span class="s2">/logs"</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>pipefail
+</code></pre></div>
+<p><code>pipefail</code> makes an inference failure visible when output is piped through
+<code>tee</code>. It does not create directories or repair an invalid path.</p>
+<h2 id="python-imports-the-wrong-checkout-or-runtime">Python imports the wrong checkout or runtime<a class="headerlink" href="#python-imports-the-wrong-checkout-or-runtime" title="Permanent link">&para;</a></h2>
+<p>Check the interpreter and the actual package location in the shell that starts
+the engine:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>--version
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>--version
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">'import sys, vllm_gr; print(sys.executable); print(vllm_gr.__file__)'</span>
+</code></pre></div>
+<p>If the import path points to an unexpected environment or checkout, activate
+the intended environment and install this checkout using its platform guide.
+Use <code>python -m pip</code> to target that interpreter. Installing GR does not
+provision or upgrade the Ascend vendor stack. Installing into one Python
+environment does not repair another environment.</p>
+<p>Run <code>vllm-gr check-env</code> for CUDA or <code>vllm-gr check-env --npu</code> for Ascend.
+These checks establish runtime compatibility, not successful model inference,
+operator execution, or sufficient device memory.</p>
+<h2 id="ascend-dependencies-or-custom-operators-fail-to-load">Ascend dependencies or custom operators fail to load<a class="headerlink" href="#ascend-dependencies-or-custom-operators-fail-to-load" title="Permanent link">&para;</a></h2>
+<p>The source version behind these guides requires vLLM 0.30.0, vLLM-Ascend
+0.30.0rc2, and Triton-Ascend 3.6.0 from the prepared vendor environment.
+Follow <a href="../quickstart-ascend/">Ascend installation</a>; an environment named after
+an older release does not become compatible just by installing GR.</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unsupported vLLM or vLLM-Ascend version</td>
+<td>The active interpreter's package versions</td>
+<td>Return to the matching vendor image instead of mixing release stacks.</td>
+</tr>
+<tr>
+<td>Triton-Ascend is installed but its backend is missing</td>
+<td>The active <code>triton</code> module, reported by <code>check-env --npu</code></td>
+<td>Resolve the shared-package overwrite described by the error; standard Triton metadata alone is insufficient.</td>
+</tr>
+<tr>
+<td><code>custom_ops_lib</code> cannot be imported or a shared library is missing</td>
+<td>CANN, the installed custom operator environment, and the active Python</td>
+<td>Load the CANN and custom xllm-ops environments from the installation guide in this shell.</td>
+</tr>
+<tr>
+<td>A required binding is missing</td>
+<td>The installed xllm-ops build and exported callables</td>
+<td>Build the required operator subset for this image's CANN version and reinstall its Python binding.</td>
+</tr>
+</tbody>
+</table>
+<p>The Python binding is named <code>custom_ops_lib</code>. <code>custom_xllm_math</code> is the CANN
+vendor directory, not the Python module name. On the prepared NPU host, this
+checks binding exposure without launching an inference request:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;'PY'</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s">from vllm_gr.ops.npu._xllm_loader import custom_ops</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">ops = custom_ops()</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">if ops is None:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">    raise SystemExit("custom_ops_lib is unavailable; check the installed runtime and loader logs")</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">names = (</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">    "cache_unshared_kv", "x_attention", "select_unshared_kv",</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">    "beam_search_group", "beam_search_rec_final_select", "rec_constrained_topk",</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">for name in names:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">    print(name, callable(getattr(ops, name, None)))</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">PY</span>
+</code></pre></div>
+<p>Successful import and callable checks do not establish ABI compatibility or
+successful execution on the device. Keep the original loader error if this
+fails. Do not reuse custom operators compiled for a different CANN stack.
+Attention's cascade fallback does not supply a missing catalog-constrained
+TopK operator: that resolver has no Torch fallback.
+See the <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/ops/npu/_xllm_loader.py">binding loader</a>
+and <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/ops/npu/rec_constrained_topk.py">constrained TopK resolver</a>.</p>
+<p>Keep <code>pip check</code> reports as diagnostics. The vendor image has documented
+metadata discrepancies; distinguish those from a new missing dependency or a
+failed NumPy/cv2 import, as explained in the Ascend installation guide.</p>
+<h2 id="engine-startup-reports-insufficient-free-memory">Engine startup reports insufficient free memory<a class="headerlink" href="#engine-startup-reports-insufficient-free-memory" title="Permanent link">&para;</a></h2>
+<p>Read the reported free memory and requested utilization. The startup check can
+fail before inference when other jobs occupy the device. Check the allocated
+device with <code>nvidia-smi</code> or <code>npu-smi info</code>, according to your platform.</p>
+<p>Use a free device through your environment's allocation process. Stop only
+your own unneeded inference jobs; do not terminate other users' processes.
+<code>gpu_memory_utilization</code> also applies on NPU. Lower it only when enough memory
+remains for weights, KV storage, and execution buffers; lowering it blindly can
+move the failure to a later allocation. Wider Beams and additional graph
+captures can require more memory. A memory-admission error alone is not a
+numerical-accuracy failure.</p>
+<h2 id="an-argument-is-unknown-or-configuration-sources-conflict">An argument is unknown or configuration sources conflict<a class="headerlink" href="#an-argument-is-unknown-or-configuration-sources-conflict" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Configuration layer</th>
+<th>Put settings here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GR engine configuration</td>
+<td><code>beam</code> and <code>constraint_table</code> in <code>--vllm-gr-config</code> YAML or the Python <code>vllm_gr_config</code> mapping.</td>
+</tr>
+<tr>
+<td>Native engine configuration</td>
+<td>Supported <code>GRLLM</code>/serve options such as <code>max_model_len</code>, <code>async_scheduling</code>, and <code>gpu_memory_utilization</code>.</td>
+</tr>
+<tr>
+<td>Beam request</td>
+<td>Python <code>BeamSearchParams</code>, or HTTP fields and supported <code>vllm_xargs</code> entries.</td>
+</tr>
+<tr>
+<td>Platform extension</td>
+<td>Only keys and nesting supported by the installed vLLM-Ascend release's <code>additional_config</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>An <code>EngineArgs.__init__() got an unexpected keyword argument</code> error means the
+argument was not accepted at that layer. Do not pass platform switches such as
+<code>enable_npugraph_ex</code> as arbitrary top-level <code>GRLLM</code> keywords. Check the exact
+vendor release's configuration contract before moving a setting elsewhere.</p>
+<p>Do not combine canonical GR configuration with legacy GR catalog, attention,
+or Beam overrides in CLI options or <code>additional_config</code>. Restore the complete
+<a href="../online-serving/">online example</a> before adding custom settings. Keep
+<code>async_scheduling=True</code>, Chunked Prefill disabled, and request width equal to
+<code>beam.max_width</code>. HTTP <code>n</code> is this Beam width, not a display limit.
+See <a href="../parameter-reference/">Beam parameters and modes</a> and the
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/engine/arg_utils_gr.py">configuration boundary</a>.</p>
+<h2 id="a-graph-does-not-replay-or-fallback-counts-increase">A graph does not replay, or fallback counts increase<a class="headerlink" href="#a-graph-does-not-replay-or-fallback-counts-increase" title="Permanent link">&para;</a></h2>
+<p>On NPU, first confirm the eager example works. Then select graph execution
+without changing the inputs. For serving, enable <code>beam.graph_enabled</code>, remove
+<code>--enforce-eager</code>, and restart the engine. The offline demo's <code>--execution</code>
+option controls NPU; it does not switch CUDA into eager mode.</p>
+<p>Inspect <code>npu_beam_graph</code> counters from the NPU graph example:</p>
+<table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Interpretation or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No Decode replay for one generated component</td>
+<td>Expected: this request finishes in Prefill.</td>
+</tr>
+<tr>
+<td>Missing <code>(B, input_width)</code> in <code>captured_shapes</code></td>
+<td>Configure the exact logical batch size and Decode input widths before engine startup.</td>
+</tr>
+<tr>
+<td>Increasing <code>fallbacks</code></td>
+<td>Inspect <code>fallback_reasons</code>; Beam FULL was not used, but execution need not be purely eager.</td>
+</tr>
+<tr>
+<td>More dispatches than measured Decode steps</td>
+<td>Counters include warmup as well as measured or profiled requests.</td>
+</tr>
+</tbody>
+</table>
+<p>For retained widths <code>[128, 64, 32]</code>, Decode inputs are 128 and 64, not 32.
+Capture only the needed shapes. Prefill capture has separate controls and
+precision limits. Configuration flags alone are not replay evidence; inspect
+the counters and a separate profile. See
+<a href="../parameter-reference/#match-npu-graph-shapes-to-decode-inputs">graph shape configuration</a>.</p>
+<h2 id="sid-candidates-scores-or-ranking-differ">SID candidates, scores, or ranking differ<a class="headerlink" href="#sid-candidates-scores-or-ranking-differ" title="Permanent link">&para;</a></h2>
+<p>Compare the same model/tokenizer snapshot, catalog, prompt token IDs, dtype,
+batch size, generation budget, candidate domain, widths, and cache policy.
+The direct offline demo truncates or pads to <code>--input-len</code>; the HTTP example
+does not apply that preprocessing. Identical prompt text alone is insufficient.</p>
+<p>Compare ordered sequences, candidate sets, and scores for matching sequences
+separately. A different Beam schedule or full-vocabulary versus SID-family
+normalization changes the search semantics. Catalog-free SID stages do not
+guarantee that a generated combination identifies a known item. Valid SIDs
+also do not establish unchanged recommendation quality.</p>
+<p>For NPU, the recorded exact-bucket tests do not resolve the open padded-Prefill
+precision limitation. Do not claim arbitrary mixed-length Graph/Eager parity
+from a passing bounded case. Isolate Decode with Prefill graphs disabled when
+following the recorded reproducer, and preserve its input conditions. See
+<a href="../validation-benchmarking/">Validation and benchmarking</a> and the
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/beam_search/README.md#open-precision-limitation-npu-prefill-padding-001">documented precision scope</a>.</p>
+<h2 id="http-requests-or-artifact-validation-fail">HTTP requests or artifact validation fail<a class="headerlink" href="#http-requests-or-artifact-validation-fail" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connection refused</td>
+<td>Server startup, host, and port</td>
+<td>Keep the server running and use the address selected in the online guide.</td>
+</tr>
+<tr>
+<td>Model not found</td>
+<td><code>/v1/models</code> and <code>--served-model-name</code></td>
+<td>Send the configured alias, <code>onerec</code> in the guide.</td>
+</tr>
+<tr>
+<td>Artifact or tokenizer digest mismatch</td>
+<td>Artifact path, both digests, and tokenizer snapshot</td>
+<td>Rebuild the artifact and YAML together; do not edit a digest to bypass validation.</td>
+</tr>
+<tr>
+<td>Triples JSON supplied as a server catalog</td>
+<td>Artifact format</td>
+<td>Compile a persistent <code>.safetensors</code> table for the online service.</td>
+</tr>
+<tr>
+<td>Width or budget error</td>
+<td>Request <code>n</code>, server capacity, and boundary positions</td>
+<td>Keep width 128; <code>max_tokens=5</code> with begin/end reserves three generated components.</td>
+</tr>
+</tbody>
+</table>
+<p>Read the response error body and the first specific server error. A <code>length</code>
+finish reason can be normal for fixed-budget Beam; it is not automatically a
+failed generation. Follow <a href="../online-serving/">Online serving</a> for the complete
+request and artifact setup.</p>
+<h2 id="collect-a-small-diagnostic-record">Collect a small diagnostic record<a class="headerlink" href="#collect-a-small-diagnostic-record" title="Permanent link">&para;</a></h2>
+<p>Run these basic checks in the failing environment; they do not run inference:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>--version
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>--version
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>python<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;'PY'</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s">from importlib import metadata, util</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s">for name in ("vllm-gr", "vllm", "vllm-ascend", "torch", "torch-npu", "triton-ascend"):</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">    try:</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">        print(name, metadata.version(name))</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">    except metadata.PackageNotFoundError:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">        print(name, "not installed")</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">for name in ("vllm_gr", "vllm", "torch", "triton"):</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">    spec = util.find_spec(name)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s">    print(name, "module:", None if spec is None else spec.origin)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s">PY</span>
+</code></pre></div>
+<p>Record the selected device and runtime-check result, the first error and nearby
+context, the exact command, relevant graph settings, and whether eager works.
+For a numerical issue, include model/input identity and matching token/score
+evidence. For performance, include the timing boundary and repeated samples.
+Remove credentials, private paths, and private endpoint names before sharing.
+Do not dump the full environment, credential files, or authentication headers.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../validation-benchmarking/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Validation and benchmarking">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Validation and benchmarking
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright contributors to the vLLM-GR project
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "content.code.copy", "search.suggest", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

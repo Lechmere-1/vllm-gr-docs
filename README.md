@@ -13,12 +13,16 @@ the vLLM-GR documentation preview:
 - Online serving (CUDA and Ascend NPU)
 - Beam parameters and modes
 - Validation and benchmarking
+- Beam Search explained
+- Models and capabilities
+- Troubleshooting
 
 The installation guides originate from [JiusiServe/vllm-gr](https://github.com/JiusiServe/vllm-gr)
 at `c4966f18a11a0aca9f05bda2e270c634c342f868`. The preview adds a homepage,
 navigation and styling, adapts links for a standalone documentation site, and
-adds a Quickstart, inference tutorials, a parameter reference, and validation
-and benchmarking guidance checked against that source revision.
+adds a Quickstart, inference tutorials, a parameter reference, Beam Search
+concepts, model and capability guidance, validation, benchmarking, and
+troubleshooting checked against that source revision.
 It is a documentation preview, not a separate release of the inference framework.
 
 Project documentation is distributed under the original Apache-2.0 license;

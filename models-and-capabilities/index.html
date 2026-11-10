@@ -1,0 +1,1559 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Generative recommendation inference on vLLM">
+      
+      
+      
+        <link rel="canonical" href="https://lechmere-1.github.io/vllm-gr-docs/models-and-capabilities/">
+      
+      
+        <link rel="prev" href="../online-serving/">
+      
+      
+        <link rel="next" href="../parameter-reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Models and capabilities - vLLM-GR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#models-and-capabilities" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vLLM-GR" class="md-header__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vLLM-GR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Models and capabilities
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../beam-search-explained/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../validation-benchmarking/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vLLM-GR" class="md-nav__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    vLLM-GR
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CUDA GPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart-ascend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ascend NPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../beam-search-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam Search explained
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First offline inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../online-serving/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Online serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models and capabilities
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models and capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#choose-an-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose an entry point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#know-which-component-owns-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Know which component owns what
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-with-onerec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start with OneRec
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distinguish-the-two-public-pangu-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distinguish the two public Pangu workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distinguish the two public Pangu workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ordinary-text-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordinary text generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sid-execution-with-a-converted-checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SID execution with a converted checkpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#separate-the-beam-protocol-from-the-model-runner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate the Beam protocol from the model runner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-capabilities-by-execution-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check capabilities by execution path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#treat-thinking-as-a-separate-model-capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat thinking as a separate model capability
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam parameters and modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation-benchmarking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation and benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#choose-an-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose an entry point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#know-which-component-owns-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Know which component owns what
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-with-onerec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start with OneRec
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distinguish-the-two-public-pangu-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distinguish the two public Pangu workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distinguish the two public Pangu workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ordinary-text-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordinary text generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sid-execution-with-a-converted-checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SID execution with a converted checkpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#separate-the-beam-protocol-from-the-model-runner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate the Beam protocol from the model runner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-capabilities-by-execution-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check capabilities by execution path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#treat-thinking-as-a-separate-model-capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat thinking as a separate model capability
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="models-and-capabilities">Models and capabilities<a class="headerlink" href="#models-and-capabilities" title="Permanent link">&para;</a></h1>
+<p>Choose a model and an inference path together. A checkpoint that generates text
+does not automatically contain recommendation SID tokens, a business catalog,
+or trained SID embeddings.</p>
+<p>This guide describes the source snapshot used by this documentation preview,
+<code>c4966f18</code>. A supported code path is not a claim that every checkpoint, device,
+batch shape, or feature combination has passed hardware validation.</p>
+<h2 id="choose-an-entry-point">Choose an entry point<a class="headerlink" href="#choose-an-entry-point" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Your goal</th>
+<th>Model and data</th>
+<th>Start here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run the standard recommendation example</td>
+<td>OneRec weights and tokenizer with the matching SID vocabulary; a compatible triples catalog</td>
+<td><a href="../first-inference/">First offline inference</a>, then <a href="../online-serving/">Online serving</a></td>
+</tr>
+<tr>
+<td>Generate ordinary text with public Pangu weights</td>
+<td>The public openPangu Embedded 1B checkpoint and its original tokenizer</td>
+<td><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/pangu1b/README.md">Pangu text inference example</a></td>
+</tr>
+<tr>
+<td>Exercise SID Beam execution using public Pangu assets</td>
+<td>A separately converted SID checkpoint and a matching synthetic catalog</td>
+<td><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/pangu1b/README.md#prepare-public-weights-for-constrained-sid-beam-search">Pangu SID preparation workflow</a></td>
+</tr>
+<tr>
+<td>Search the full model vocabulary without a catalog</td>
+<td>A supported text decoder and an explicit unconstrained Beam configuration</td>
+<td><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/docs/npu_unconstrained_beam.md">NPU unconstrained Beam guide</a>; CUDA callers use the same public Beam API with the CUDA runtime</td>
+</tr>
+<tr>
+<td>Generate a thinking continuation before SID selection</td>
+<td>A checkpoint with the required thinking tokens and behavior, plus a compatible SID catalog</td>
+<td><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/beam_search/README.md#optional-thinking-before-sid-generation">Thinking and SID Beam example</a></td>
+</tr>
+</tbody>
+</table>
+<p>The ordinary Pangu example uses <code>GRLLM.generate()</code>, which follows the standard
+vLLM generation path. The recommendation examples use
+<code>GRLLM.beam_search_v1()</code>. HTTP recommendation requests select Beam explicitly
+with <code>use_beam_search: true</code>; starting a server alone does not select that path.</p>
+<p>The offline Python API and the HTTP service are separate frontends to the
+engine. An asynchronous engine does not require an HTTP server, and an offline
+<code>GRLLM</code> call can still use asynchronous scheduling internally. See the
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/docs/beam_batch_execution_contract.md">Beam execution contract</a> for request ownership and lifecycle.</p>
+<h2 id="know-which-component-owns-what">Know which component owns what<a class="headerlink" href="#know-which-component-owns-what" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>What it does not supply</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model configuration and weights</td>
+<td>Define the network, vocabulary dimensions, embeddings, and output projection used for inference</td>
+<td>A business item catalog or ground-truth evaluation dataset</td>
+</tr>
+<tr>
+<td>Tokenizer files</td>
+<td>Map text and SID symbols to token IDs and decode IDs back to text</td>
+<td>Trained vectors for newly added tokens</td>
+</tr>
+<tr>
+<td>Catalog or triples document</td>
+<td>Define which A/B/C SID combinations are legal recommendation candidates</td>
+<td>Learned probabilities or model training</td>
+</tr>
+<tr>
+<td>Compiled Constraint Table</td>
+<td>Turn catalog relations into an artifact for the selected backend, tied to its tokenizer identity</td>
+<td>A replacement for the model weights or tokenizer</td>
+</tr>
+<tr>
+<td>SID-to-item mapping</td>
+<td>Map complete generated SIDs to business item identifiers</td>
+<td>A guarantee that a randomly initialized SID model recommends useful items</td>
+</tr>
+</tbody>
+</table>
+<p>Tokenizer assets are normally stored beside the weights in a model directory,
+but tokenization is outside the model's tensor forward computation. The token
+embedding and output projection are model tensors. Adding tokenizer entries
+without corresponding weight rows is not sufficient to extend a checkpoint.</p>
+<p>A catalog can constrain a model to emit legal symbols even when the model has
+not learned useful preferences over those symbols. Legal output and useful
+recommendations therefore need different validation.</p>
+<p>Use the same immutable local model/tokenizer snapshot when compiling the
+Constraint Table and running inference. A path name is not an identity check.
+The artifact and tokenizer digests in the canonical configuration identify the
+compiled inputs; changing the tokenizer or catalog requires rebuilding them.
+See <a href="../parameter-reference/">Beam parameters and modes</a> for the configuration
+fields and boundary-token budget.</p>
+<h2 id="start-with-onerec">Start with OneRec<a class="headerlink" href="#start-with-onerec" title="Permanent link">&para;</a></h2>
+<p>The main walkthrough uses <code>OpenOneRec/OneRec-1.7B</code>, its tokenizer, the tracked
+video triples fixture, and a short prompt. It downloads weights separately
+from the framework and runs one request with capacity 128 and three generated
+SID components. Follow <a href="../first-inference/">First offline inference</a> without
+combining advanced options on the initial run.</p>
+<p>The constrained example generates A, B, and C components. Its configured BEGIN
+and END positions are additional public-output positions, so <code>max_tokens=5</code>
+represents three generated components. A one- or two-component run produces a
+valid catalog prefix; it is not a complete three-component item identifier.</p>
+<p>The standalone example accepts a triples JSON document and compiles a temporary
+artifact. The online service instead loads a persistent artifact and canonical
+configuration. These inputs are not interchangeable command-line arguments.</p>
+<p>For business use, replace the fixture with the catalog and SID-to-item mapping
+that belong to your model and task. Do not treat the example prompt, candidate
+legality, or one successful request as a Recall measurement. Use
+<a href="../validation-benchmarking/">Validation and benchmarking</a> for separate
+functional, numerical, recommendation-quality, and performance checks.</p>
+<h2 id="distinguish-the-two-public-pangu-workflows">Distinguish the two public Pangu workflows<a class="headerlink" href="#distinguish-the-two-public-pangu-workflows" title="Permanent link">&para;</a></h2>
+<h3 id="ordinary-text-generation">Ordinary text generation<a class="headerlink" href="#ordinary-text-generation" title="Permanent link">&para;</a></h3>
+<p>The repository provides an offline text-generation example and HTTP serving
+instructions for public openPangu Embedded 1B weights. This route does not
+require adding SID symbols or creating a recommendation catalog.</p>
+<p>The <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/pangu_compat.py">Pangu compatibility layer</a> preserves the checkpoint's declared
+tied embedding behavior. The public checkpoint can contain a zero-filled
+<code>lm_head.weight</code> placeholder; treating that placeholder as an independent
+output head would produce incorrect all-zero logits. This compatibility fix
+does not create a new Pangu architecture or train a recommendation model.</p>
+<p>Use the Pangu-specific runtime settings from the <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/pangu1b/README.md">example guide</a>,
+including the slow tokenizer and its cache settings. Its NPU path selects KV
+block size 128. The ordinary text-generation settings are not a replacement
+for the canonical Beam configuration in the recommendation guides.</p>
+<h3 id="sid-execution-with-a-converted-checkpoint">SID execution with a converted checkpoint<a class="headerlink" href="#sid-execution-with-a-converted-checkpoint" title="Permanent link">&para;</a></h3>
+<p>At this source snapshot, the project's SID-extended Pangu checkpoint is not
+publicly available. The <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/tools/model_conversion/prepare_pangu_sid.py">preparation tool</a> makes execution smoke
+tests possible from public <code>openpangu/openPangu-Embedded-1B-V1.1</code> assets.</p>
+<p>Preparation reads a local public snapshot and writes a separate output
+directory. It refuses an existing destination and validates the result on CPU
+before publishing it. It expects the public Pangu architecture, original
+vocabulary size, tied embedding layout, and safetensors weights; it is not a
+generic converter for arbitrary Pangu checkpoints.</p>
+<p>The conversion performs these operations:</p>
+<ol>
+<li>Preserve existing token IDs and original tokenizer entries, then add 8192
+   symbols in each of the A, B, and C SID families plus BEGIN and END markers.</li>
+<li>Expand the embedding tensor and initialize new SID and padding rows randomly
+   using a fixed seed. Preserve the original embedding prefix and other model
+   tensors.</li>
+<li>Materialize the tied output-head weights from the expanded embedding instead
+   of retaining the public checkpoint's zero placeholder, and update vocabulary
+   metadata.</li>
+<li>Write token-layout, tensor-inventory, and conversion-manifest reports with
+   checksums and CPU validation results.</li>
+</ol>
+<p>This changes tokenizer assets, vocabulary metadata, and embedding/output-head
+storage. It is not accurate to call the converted checkpoint byte-for-byte
+unchanged. It also does not train the new rows: their initialization supplies
+executable tensors, not learned recommendation knowledge.</p>
+<p>The tool records a caller-declared source revision and hashes the local source
+files. Its manifest explicitly reports <code>revision_verified: false</code>; the revision
+label alone is not proof that local files came from that remote commit.</p>
+<p>The <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/pangu1b/README.md#prepare-public-weights-for-constrained-sid-beam-search">documented smoke workflow</a> builds a small synthetic catalog and
+uses the existing constrained Beam example. The catalog fixes legal A/B/C
+combinations, so successful output can look like valid SIDs despite random new
+weights. This establishes neither business accuracy nor a speedup. Preparation
+does not require an accelerator; inference still requires the matching CUDA or
+Ascend runtime. The guide provides commands for both backends, rather than
+claiming identical results on every GPU and NPU.</p>
+<h2 id="separate-the-beam-protocol-from-the-model-runner">Separate the Beam protocol from the model runner<a class="headerlink" href="#separate-the-beam-protocol-from-the-model-runner" title="Permanent link">&para;</a></h2>
+<p><code>beam.execution_mode: v1</code> and <code>beam_search_v1()</code> name the GR Beam protocol.
+They do not mean that every model forward must use native ModelRunner V1.</p>
+<p>The <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/_env_check.py#L34-L69">runtime selection policy</a> defaults to ModelRunner V1 before
+vLLM initialization. An explicit <code>VLLM_USE_V2_MODEL_RUNNER=1</code> is preserved as an
+experimental opt-in. The documented V2 adaptation targets CUDA; its
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/docs/modelrunner_v2_multibatch.md">runner guide</a> records the workload, storage, capture, and lifecycle
+scope. Do not infer support for every V1 feature combination from that opt-in.</p>
+<p>The NPU guides use ModelRunner V1. In particular, the NPU unconstrained adapter
+explicitly rejects ModelRunner V2. Switching runners does not bypass model,
+generation-budget, artifact, or parallelism validation.</p>
+<h2 id="check-capabilities-by-execution-path">Check capabilities by execution path<a class="headerlink" href="#check-capabilities-by-execution-path" title="Permanent link">&para;</a></h2>
+<p>The table below summarizes the default ModelRunner V1 Beam paths in this
+snapshot. It does not turn separate capabilities into a promise that all of
+them can be combined.</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>CUDA Beam V1 path</th>
+<th>Ascend NPU Beam V1 path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Three-component catalog-constrained generation</td>
+<td>Canonical CUDA table</td>
+<td>Canonical NPU table and required NPU operators</td>
+</tr>
+<tr>
+<td>Full-vocabulary Beam without catalog membership</td>
+<td>Explicit unconstrained configuration</td>
+<td>Explicit unconstrained configuration; effective budget remains 1 through 3</td>
+</tr>
+<tr>
+<td>Dynamic retained widths and final result limit</td>
+<td>Python and HTTP interfaces</td>
+<td>Python, HTTP, and the standalone demo; keep scalar candidate width unset for changing widths</td>
+</tr>
+<tr>
+<td>Independent per-parent candidate schedules</td>
+<td><code>per_parent_beam_widths</code>, subject to request and engine limits</td>
+<td>Not supported in this snapshot</td>
+</tr>
+<tr>
+<td>Multiple independent catalog Tries in one artifact</td>
+<td>Supported through per-request Trie selectors</td>
+<td>Multi-Trie artifacts and nonzero Trie selectors are rejected</td>
+</tr>
+<tr>
+<td>Catalog-free A/B/C stage domains</td>
+<td>Not the NPU stage-domain feature</td>
+<td>Opt-in <code>beam.sid_stage_vocab</code>, only with unconstrained generation</td>
+</tr>
+<tr>
+<td>Decode graph execution</td>
+<td>CUDA capture and replay policy</td>
+<td>Exact logical batch and Decode input-width capture, with separate fallback behavior</td>
+</tr>
+</tbody>
+</table>
+<p>Constrained generation remains limited by the three-level table; increasing
+<code>beam.max_decode_steps</code> does not deepen the catalog. The current NPU
+unconstrained adapter also limits generation to 1 through 3 tokens. Ordinary
+LLM text generation is a different path and does not remove these Beam limits.</p>
+<p>The <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/docs/multi_root_constraint_table.md">multi-Trie contract</a> uses one model vocabulary and tokenizer
+for all Tries. A request selector chooses a catalog root, not another model or
+another checkpoint. CPU table compilation/reference support does not establish
+a production CPU Beam inference engine.</p>
+<p>In NPU catalog-free SID stage mode, selecting A/B/C families is not catalog
+membership checking. Stage-local probability normalization differs from
+full-vocabulary normalization and can change scores and cross-parent rankings.
+Compare implementations under the same probability domain. See the
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/docs/npu_unconstrained_beam.md">unconstrained scoring contract</a> before enabling this mode.</p>
+<p>For graph shapes and width rules, follow
+<a href="../parameter-reference/">Beam parameters and modes</a>. A graph-enabled setting is
+not evidence of actual replay, and replay is not a guarantee of numerical
+agreement for arbitrary padded Prefill inputs.</p>
+<h2 id="treat-thinking-as-a-separate-model-capability">Treat thinking as a separate model capability<a class="headerlink" href="#treat-thinking-as-a-separate-model-capability" title="Permanent link">&para;</a></h2>
+<p>The offline demo has two distinct optional routes: <code>--enable-thinking</code> performs
+ordinary full-vocabulary generation, while <code>--cot</code> generates a thinking
+continuation and then runs constrained SID Beam Search. They are mutually
+exclusive. Neither flag teaches reasoning to weights that do not support it.</p>
+<p>The combined path requires dedicated <code>&lt;think&gt;</code> and <code>&lt;/think&gt;</code> tokenizer tokens,
+a matching SID vocabulary/catalog, and enough context for both phases. It hands
+off token IDs and performs fresh Beam Prefill; it does not reuse thinking KV
+across phases. Its thinking budget does not extend the SID table's depth.</p>
+<p>The <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/beam_search/README.md#optional-thinking-before-sid-generation">source workflow</a> documents the NPU setup and explicitly
+does not include CUDA hardware validation of the combined example. The shared
+script accepts both backends, which is different from proving equivalent
+quality, timing, or graph coverage on both. Qualify the chosen model, frontend,
+runner, and platform through <a href="../validation-benchmarking/">validation</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../online-serving/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Online serving">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Online serving
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../parameter-reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Beam parameters and modes">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Beam parameters and modes
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright contributors to the vLLM-GR project
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "content.code.copy", "search.suggest", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -47,6 +47,10 @@ body {
   border-radius: 0.25rem;
 }
 
+.md-typeset .gr-guide-cards {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 @media screen and (max-width: 44.984375em) {
   .gr-home-tagline {
     font-size: 1.12rem;
@@ -56,5 +60,9 @@ body {
     display: block;
     margin-right: 0;
     text-align: center;
+  }
+
+  .md-typeset .gr-guide-cards {
+    grid-template-columns: 1fr;
   }
 }

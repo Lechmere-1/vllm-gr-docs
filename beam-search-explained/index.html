@@ -1,0 +1,1615 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Generative recommendation inference on vLLM">
+      
+      
+      
+        <link rel="canonical" href="https://lechmere-1.github.io/vllm-gr-docs/beam-search-explained/">
+      
+      
+        <link rel="prev" href="../quickstart-ascend/">
+      
+      
+        <link rel="next" href="../first-inference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Beam Search explained - vLLM-GR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#beam-search-explained" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vLLM-GR" class="md-header__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vLLM-GR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Beam Search explained
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../validation-benchmarking/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vLLM-GR" class="md-nav__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    vLLM-GR
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CUDA GPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart-ascend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ascend NPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam Search explained
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam Search explained
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#follow-one-generation-stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Follow one generation stage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#separate-capacity-candidate-count-and-returned-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate capacity, candidate count, and returned results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-topk-and-global-selection-do-different-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local TopK and global selection do different jobs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local TopK and global selection do different jobs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-parents-can-produce-three-winning-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two parents can produce three winning children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-parents-still-need-a-global-competition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three parents still need a global competition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-selecting-parents-requires-kv-reordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why selecting parents requires KV reordering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#narrowing-and-widening-with-capacity-128" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Narrowing and widening with capacity 128
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prefill-decode-and-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefill, Decode, and graphs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-the-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read the implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First offline inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../online-serving/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Online serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models-and-capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models and capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameter-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam parameters and modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation-benchmarking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation and benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#follow-one-generation-stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Follow one generation stage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#separate-capacity-candidate-count-and-returned-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separate capacity, candidate count, and returned results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-topk-and-global-selection-do-different-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local TopK and global selection do different jobs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local TopK and global selection do different jobs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-parents-can-produce-three-winning-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two parents can produce three winning children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-parents-still-need-a-global-competition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three parents still need a global competition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-selecting-parents-requires-kv-reordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why selecting parents requires KV reordering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#narrowing-and-widening-with-capacity-128" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Narrowing and widening with capacity 128
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prefill-decode-and-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefill, Decode, and graphs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-the-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read the implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="beam-search-explained">Beam Search explained<a class="headerlink" href="#beam-search-explained" title="Permanent link">&para;</a></h1>
+<p>Beam Search keeps several possible continuations after each generated token.
+For recommendation, a continuation may contain semantic ID (SID) components
+such as A, B, and C. A catalog-constrained search accepts children that follow
+the supplied catalog; a full-vocabulary search has no item-membership guarantee.</p>
+<p>This page explains the search and KV-cache relationship in the source snapshot
+used by these guides. Start with <a href="../first-inference/">First offline inference</a>,
+then use <a href="../parameter-reference/">Beam parameters and modes</a> for actual settings.</p>
+<h2 id="follow-one-generation-stage">Follow one generation stage<a class="headerlink" href="#follow-one-generation-stage" title="Permanent link">&para;</a></h2>
+<p><img alt="Beam Search: model forward, candidate selection, global selection, parent KV inheritance, and next input" src="../assets/beam-search-flow.svg" /></p>
+<p>Each non-final stage connects five operations:</p>
+<ol>
+<li>Run the model for the current prefixes and produce logits.</li>
+<li>Select up to <code>K</code> valid candidate tokens for each parent.</li>
+<li>Add each parent's cumulative score and select the winning children globally.</li>
+<li>Carry each winner's parent index into sequence state and KV inheritance.</li>
+<li>Feed the selected child tokens to the next model forward.</li>
+</ol>
+<p>The arrows carry token IDs, scores, and parent identity together. Keeping only
+the selected token IDs is insufficient: identical tokens can extend different
+prefixes and therefore require different attention histories.</p>
+<h2 id="separate-capacity-candidate-count-and-returned-results">Separate capacity, candidate count, and returned results<a class="headerlink" href="#separate-capacity-candidate-count-and-returned-results" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C</code></td>
+<td>Engine storage capacity, configured by <code>beam.max_width</code></td>
+<td>128</td>
+</tr>
+<tr>
+<td><code>w_in</code></td>
+<td>Number of parent prefixes entering this stage</td>
+<td>64</td>
+</tr>
+<tr>
+<td><code>K</code></td>
+<td>Maximum candidate tokens contributed by each parent</td>
+<td>64</td>
+</tr>
+<tr>
+<td><code>w_out</code></td>
+<td>Number of winning children retained after this stage</td>
+<td>32</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Maximum final sequences returned to the caller</td>
+<td>16</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>Number of generated components in each fixed-budget sequence</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>Capacity 128 does not mean 128 generated tokens. It bounds the supported Beam
+geometry; the request's <code>beam_width</code> still matches the configured capacity.
+A dynamic schedule changes the active retained widths within that capacity.
+The candidate pool has up to <code>w_in * K</code> entries, including invalid slots that
+cannot win. There must be enough valid continuations to fill the intended
+result set; padding or invalid entries do not create valid recommendations.</p>
+<p><code>R=16, N=3</code> means returning at most 16 sequences of three generated components.
+It does not mean 16 generation steps, nor does it narrow earlier search stages.
+Likewise, the demo's <code>--print-beams</code> changes only how many records are printed.</p>
+<h2 id="local-topk-and-global-selection-do-different-jobs">Local TopK and global selection do different jobs<a class="headerlink" href="#local-topk-and-global-selection-do-different-jobs" title="Permanent link">&para;</a></h2>
+<p>For parent <code>p</code> and candidate token <code>x</code>, the ordinary cumulative score is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>child_score(p, x) = parent_score(p) + log_probability(x | parent_prefix(p))
+</code></pre></div>
+<p>Local TopK limits each parent's candidate contribution. Global selection ranks
+the complete candidate pool for the request and retains <code>w_out</code> children.
+One parent may supply multiple winners; another may supply none. A per-parent
+candidate limit is not a quota that guarantees every parent a surviving child.
+Final length-penalty handling is separate from this cumulative-score example.</p>
+<p>The following small examples use retained width <strong>W=3</strong> and <strong>K=2</strong> to make
+parent identity visible. They illustrate the algorithm, not a universal NPU
+configuration. In this source snapshot, independent per-parent candidate counts
+are exposed for CUDA V1; NPU has additional candidate-width restrictions.</p>
+<h3 id="two-parents-can-produce-three-winning-children">Two parents can produce three winning children<a class="headerlink" href="#two-parents-can-produce-three-winning-children" title="Permanent link">&para;</a></h3>
+<p>Suppose two prefixes remain, with cumulative scores <code>P0=-1.00</code> and <code>P1=-1.40</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Parent</th>
+<th>Candidate</th>
+<th style="text-align: right;">Conditional log probability</th>
+<th style="text-align: right;">Cumulative score</th>
+<th style="text-align: right;">Global rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P0</td>
+<td>a</td>
+<td style="text-align: right;">-0.80</td>
+<td style="text-align: right;">-1.80</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>b</td>
+<td style="text-align: right;">-1.10</td>
+<td style="text-align: right;">-2.10</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>c</td>
+<td style="text-align: right;">-0.90</td>
+<td style="text-align: right;">-2.30</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>d</td>
+<td style="text-align: right;">-1.80</td>
+<td style="text-align: right;">-3.20</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+<p>Four candidates compete for three positions. The winning children are
+<code>P0+a</code>, <code>P0+b</code>, and <code>P1+c</code>, with parent indices <strong>[0, 0, 1]</strong>.
+This stage widens two parents into three children. It duplicates a parent's
+history where needed; it does not reconstruct a previously discarded prefix.</p>
+<h3 id="three-parents-still-need-a-global-competition">Three parents still need a global competition<a class="headerlink" href="#three-parents-still-need-a-global-competition" title="Permanent link">&para;</a></h3>
+<p>At a later stage, suppose the input scores are <code>[-1.80, -2.10, -2.30]</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Parent</th>
+<th>Candidate</th>
+<th style="text-align: right;">Conditional log probability</th>
+<th style="text-align: right;">Cumulative score</th>
+<th style="text-align: right;">Global rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P0</td>
+<td>e</td>
+<td style="text-align: right;">-0.70</td>
+<td style="text-align: right;">-2.50</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>f</td>
+<td style="text-align: right;">-0.90</td>
+<td style="text-align: right;">-2.70</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>g</td>
+<td style="text-align: right;">-2.00</td>
+<td style="text-align: right;">-4.10</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>h</td>
+<td style="text-align: right;">-2.20</td>
+<td style="text-align: right;">-4.30</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>i</td>
+<td style="text-align: right;">-0.80</td>
+<td style="text-align: right;">-3.10</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>j</td>
+<td style="text-align: right;">-1.50</td>
+<td style="text-align: right;">-3.80</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+<p>Six candidates compete for three positions. The winning parent map is
+<strong>[0, 0, 2]</strong>: P0 contributes twice, P1 is eliminated, and P2 contributes once.
+Some execution paths group survivors by parent for the next forward instead
+of storing them in score order. Tokens, scores, sequence state, and KV must all
+follow the same permutation; final output ranking is a separate boundary.</p>
+<h2 id="why-selecting-parents-requires-kv-reordering">Why selecting parents requires KV reordering<a class="headerlink" href="#why-selecting-parents-requires-kv-reordering" title="Permanent link">&para;</a></h2>
+<p>Attention reads K/V tensors representing the prefix already processed by the
+model. After selecting parent map <code>[0, 0, 2]</code>, the next history must be:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>new row 0 &lt;- old parent 0 history
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>new row 1 &lt;- old parent 0 history
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>new row 2 &lt;- old parent 2 history
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>next input tokens = [e, f, i]
+</code></pre></div>
+<p>Rows 0 and 1 share the same past, but their next input tokens differ. On the
+next forward, those tokens create different new K/V entries. Reading the old
+row-1 history for child <code>P0+f</code> would combine the wrong prefix with the selected
+token and could change logits, scores, and later recommendations.</p>
+<p>The prompt's paged KV can remain shared. The generated suffix's per-Beam KV
+must inherit the selected parent across every attention layer. A gather needs
+safe staging when source and destination overlap or a parent appears twice;
+an unsafe in-place overwrite can destroy history another child still needs.</p>
+<p><strong>KV reordering still happens where required.</strong> Its implementation depends on
+the execution path; do not identify the algorithm with one operator name:</p>
+<table>
+<thead>
+<tr>
+<th>Path in this source snapshot</th>
+<th>How parent KV inheritance is implemented</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NPU native fixed-width decision</td>
+<td>The eligible xllm path calls <code>select_unshared_kv</code> after non-final selection; a dispatcher provides the fallback.</td>
+</tr>
+<tr>
+<td>Dynamic stage-width state</td>
+<td><code>reorder_stage_kv</code> gathers the selected parents into persistent pools for the target width, including repeated parents.</td>
+</tr>
+<tr>
+<td>CUDA persistent V1 runner</td>
+<td>Dedicated gather/scatter kernels apply the selected parent mapping.</td>
+</tr>
+</tbody>
+</table>
+<p>The NPU native operator's grouped-parent, full-width assumptions must hold.
+Passing a new logical width to an old physical pool is not a substitute for
+correct pool strides. Dynamic execution maintains width-specific contiguous
+pools and their lifetimes. On the final selection, there is no next attention
+forward, so the NPU fixed/dynamic paths skip that next-step KV reorder.</p>
+<h2 id="narrowing-and-widening-with-capacity-128">Narrowing and widening with capacity 128<a class="headerlink" href="#narrowing-and-widening-with-capacity-128" title="Permanent link">&para;</a></h2>
+<p>Keep <code>beam.max_width=128</code> and request <code>beam_width=128</code>. For a three-component
+SID, the retained-width schedules below express different searches:</p>
+<table>
+<thead>
+<tr>
+<th>Schedule</th>
+<th style="text-align: right;">After A</th>
+<th style="text-align: right;">After B</th>
+<th style="text-align: right;">After C</th>
+<th>Decode input widths</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">128</td>
+<td>128, 128</td>
+</tr>
+<tr>
+<td>Narrowing</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">32</td>
+<td>128, 64</td>
+</tr>
+<tr>
+<td>Widening</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">128</td>
+<td>32, 64</td>
+</tr>
+</tbody>
+</table>
+<p>Narrowing keeps fewer parents for later forwards. Widening branches from the
+parents that survived earlier selection; it cannot recover pruned prefixes.
+Both can change search results and recommendation quality relative to a fixed
+schedule. A larger final width does not make earlier pruning reversible.</p>
+<p>These are examples within the three-step contract of this snapshot, not a
+claim that every device, width, candidate count, or longer schedule works.
+Use the <a href="../parameter-reference/#dynamic-narrowing-and-widening">parameter reference</a>
+for platform restrictions and matching graph configuration, and check
+<a href="../models-and-capabilities/">models and capabilities</a> before changing modes.</p>
+<h2 id="prefill-decode-and-graphs">Prefill, Decode, and graphs<a class="headerlink" href="#prefill-decode-and-graphs" title="Permanent link">&para;</a></h2>
+<p>For three effective generated components, final prompt logits select A during
+Prefill. Decode 1 processes A to select B; Decode 2 processes B to select C.
+This V1 path requires Chunked Prefill to be disabled. The complete remaining
+prompt must fit the Prefill budget; the first generated component is selected
+from its final prompt logits.</p>
+<p>Begin/end markers affect the public token budget. With both markers configured,
+<code>max_tokens=5</code> reserves two positions and produces three searched components.
+See <a href="../parameter-reference/#count-generation-steps-correctly">step counting</a>.</p>
+<p>Graph execution replays work against stable buffers and compatible shapes.
+It does not change the intended candidate scoring, global selection, parent
+identity, or KV inheritance rules. Capture coverage is path-specific: a Beam
+Forward graph does not imply that the LM head, TopK, and KV reorder are all
+inside that same graph. Prefill capture is configured separately from Decode.</p>
+<p>For NPU, the graph key includes logical batch size and Decode input width.
+The widening example needs widths 32 and 64 for its two Decode forwards; the
+final retained width 128 has no following forward. Verify actual replay rather
+than inferring it from a graph flag. Different kernels can have floating-point
+differences, so intended mathematical equivalence still needs numerical checks.
+Use <a href="../validation-benchmarking/">validation and benchmarking</a> to compare tokens,
+scores, rankings, graph replay, and latency under matching inputs and settings.</p>
+<h2 id="read-the-implementation">Read the implementation<a class="headerlink" href="#read-the-implementation" title="Permanent link">&para;</a></h2>
+<p>The links below pin the source revision used by this explanation:</p>
+<ul>
+<li><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/sampling_params.py">Request parameters and supported budgets</a></li>
+<li><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/v1/beam/dynamic_beam.py">Dynamic global selection and width-specific KV pools</a></li>
+<li><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/v1/beam/beam_decision.py">NPU native decision and same-step reorder</a></li>
+<li><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/v1/beam/reorder.py">KV reorder dispatch and native layout requirements</a></li>
+<li><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/v1/worker/beam_search_runner.py">CUDA persistent decision and KV kernels</a></li>
+<li><a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/v1/worker/beam_decode_graph.py">Beam Forward capture and replay</a></li>
+</ul>
+<p>For errors, graph fallbacks, and unexpected output, continue with
+<a href="../troubleshooting/">Troubleshooting</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../quickstart-ascend/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Ascend NPU">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Ascend NPU
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../first-inference/" class="md-footer__link md-footer__link--next" aria-label="Next: First offline inference">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                First offline inference
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright contributors to the vLLM-GR project
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "content.code.copy", "search.suggest", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

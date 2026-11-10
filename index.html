@@ -261,11 +261,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="first-inference/" class="md-tabs__link">
+        <a href="beam-search-explained/" class="md-tabs__link">
           
   
   
   User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="validation-benchmarking/" class="md-tabs__link">
+          
+  
+  
+  Operations
 
         </a>
       </li>
@@ -408,10 +428,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-the-repository" class="md-nav__link">
+  <a href="#explore-the-guides" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explore the repository
+        Explore the guides
       
     </span>
   </a>
@@ -688,6 +708,34 @@
   
   
     <li class="md-nav__item">
+      <a href="beam-search-explained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam Search explained
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="first-inference/" class="md-nav__link">
         
   
@@ -744,6 +792,34 @@
   
   
     <li class="md-nav__item">
+      <a href="models-and-capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models and capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="parameter-reference/" class="md-nav__link">
         
   
@@ -765,6 +841,65 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -780,6 +915,34 @@
     
   
     Validation and benchmarking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
   
 
     
@@ -851,10 +1014,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-the-repository" class="md-nav__link">
+  <a href="#explore-the-guides" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explore the repository
+        Explore the guides
       
     </span>
   </a>
@@ -932,15 +1095,43 @@ complete first-run route.</p>
 </ol>
 <p>See <a href="parameter-reference/">Beam parameters and modes</a> before changing search
 widths, candidate counts, generation budgets, or graph settings.</p>
-<h2 id="explore-the-repository">Explore the repository<a class="headerlink" href="#explore-the-repository" title="Permanent link">&para;</a></h2>
+<h2 id="explore-the-guides">Explore the guides<a class="headerlink" href="#explore-the-guides" title="Permanent link">&para;</a></h2>
+<div class="grid cards gr-guide-cards">
 <ul>
-<li><a href="https://github.com/JiusiServe/vllm-gr/blob/main/examples/offline_inference/beam_search/README.md">Offline Beam Search examples</a>
-  cover artifact preparation and the <code>GRLLM.beam_search_v1()</code> entry point.</li>
-<li><a href="online-serving/">Online serving</a> covers persistent artifacts, server
-  configuration, HTTP requests and response interpretation.</li>
-<li><a href="validation-benchmarking/">Validation and benchmarking</a> explains numerical
-  checks, latency measurements, graph evidence and profiling.</li>
+<li>
+<p><strong>Understand Beam Search</strong></p>
+<hr />
+<p>Follow candidates through TopK selection, parent indices, KV inheritance,
+and the next model forward.</p>
+<p><a href="beam-search-explained/">Beam Search explained</a></p>
+</li>
+<li>
+<p><strong>Choose a model and mode</strong></p>
+<hr />
+<p>Separate weights, tokenizer, and catalog responsibilities. Check the
+platform and entry-point boundaries before enabling a feature.</p>
+<p><a href="models-and-capabilities/">Models and capabilities</a></p>
+</li>
+<li>
+<p><strong>Validate and measure</strong></p>
+<hr />
+<p>Check numerical behavior, measure API latency, and collect profiles with
+clear timing boundaries.</p>
+<p><a href="validation-benchmarking/">Validation and benchmarking</a></p>
+</li>
+<li>
+<p><strong>Diagnose a failed run</strong></p>
+<hr />
+<p>Start from the first error: paths, runtime, operators, memory, artifacts,
+HTTP, or graph execution.</p>
+<p><a href="troubleshooting/">Troubleshooting</a></p>
+</li>
 </ul>
+</div>
+<p>These guides describe the vLLM-GR 0.30 source at
+<a href="https://github.com/JiusiServe/vllm-gr/tree/c4966f18a11a0aca9f05bda2e270c634c342f868"><code>c4966f1</code></a>.
+Check your installed revision when following a configuration or comparing
+feature support. Pending pull requests are not released capabilities.</p>
 
 
 
