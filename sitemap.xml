@@ -5,11 +5,51 @@
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/advanced-beam/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/api-reference/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/architecture/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
          <loc>https://lechmere-1.github.io/vllm-gr-docs/beam-search-explained/</loc>
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/cli-reference/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/community/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/configuration/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
          <loc>https://lechmere-1.github.io/vllm-gr-docs/data-and-constraints/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/developer-guide/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/documentation-guide/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/environment-variables/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/faq/</loc>
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>
@@ -21,11 +61,27 @@
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/glossary/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/governance/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/metrics-and-logging/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
          <loc>https://lechmere-1.github.io/vllm-gr-docs/models-and-capabilities/</loc>
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>
          <loc>https://lechmere-1.github.io/vllm-gr-docs/online-serving/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/pangu/</loc>
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>
@@ -42,6 +98,18 @@
     </url>
     <url>
          <loc>https://lechmere-1.github.io/vllm-gr-docs/quickstart/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/roadmap/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/serving-and-batching/</loc>
+         <lastmod>2026-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://lechmere-1.github.io/vllm-gr-docs/testing-and-ci/</loc>
          <lastmod>2026-11-10</lastmod>
     </url>
     <url>

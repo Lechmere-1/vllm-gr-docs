@@ -1,31 +1,25 @@
-# vLLM-GR documentation preview
+# vLLM-GR documentation
 
 Public website: https://lechmere-1.github.io/vllm-gr-docs/
 
 This repository hosts the generated HTML, search index and static assets for
-the vLLM-GR documentation preview:
+an independent vLLM-GR documentation edition. Its 30 pages are organized into:
 
-- Home
-- Quickstart
-- CUDA GPU installation
-- Ascend NPU installation
-- First offline inference (CUDA and Ascend NPU)
-- Online serving (CUDA and Ascend NPU)
-- Beam parameters and modes
-- Validation and benchmarking
-- Beam Search explained
-- Models and capabilities
-- Troubleshooting
-- Data and constraints
-- Python integration
+- User Guide: installation, examples, data/configuration, models, features and operations.
+- Developer Guide: contribution, architecture, testing/CI and documentation.
+- API Reference: public Python interfaces and glossary.
+- CLI Reference: serving, environment checks and repository tools.
+- Community: contact, governance, roadmap and release-note sections.
 
-The installation guides originate from [JiusiServe/vllm-gr](https://github.com/JiusiServe/vllm-gr)
-at `c4966f18a11a0aca9f05bda2e270c634c342f868`. The preview adds a homepage,
-navigation and styling, adapts links for a standalone documentation site, and
-adds a Quickstart, inference tutorials, a parameter reference, Beam Search
-concepts, model and capability guidance, data preparation, Python integration,
-validation, benchmarking, and troubleshooting checked against that source revision.
-It is a documentation preview, not a separate release of the inference framework.
+The first-release main model is `OpenOneRec/OneRec-1.7B` on CUDA and Ascend NPU.
+Pangu is an additional NPU-only guide. Unconfirmed Maintainer/Committer names
+and community plans are intentionally left pending.
+
+Installation guides and technical contracts originate from
+[JiusiServe/vllm-gr](https://github.com/JiusiServe/vllm-gr) at
+`c4966f18a11a0aca9f05bda2e270c634c342f868`. The site adapts and adds
+source-checked explanations and workflows. It is not a new framework release
+or an announcement of new hardware accuracy/performance results.
 
 Project documentation is distributed under the original Apache-2.0 license;
 see `LICENSE`. Theme attribution is in `THIRD_PARTY_NOTICES.txt`, and bundled
@@ -33,5 +27,5 @@ assets retain their third-party notices.
 
 GitHub Pages serves the root of the `main` branch. The `.nojekyll` file keeps
 the prebuilt site intact. This repository contains the generated publication
-artifact; the inference source tree and local development environment are not
-part of this publication.
+artifact; the inference source tree, local development environment and Markdown
+source are not part of this publication.
