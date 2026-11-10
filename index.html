@@ -253,6 +253,26 @@
   
 
       
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="online-serving/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -549,6 +569,93 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="online-serving/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Online serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -673,13 +780,15 @@ constraint data or your own model-aligned catalog.</p>
    when building the constraint artifact and running inference.</li>
 <li><strong>Run Beam Search V1.</strong> Follow <a href="first-inference/">First offline inference</a>
    to run one request and understand the returned SIDs.</li>
+<li><strong>Serve requests over HTTP.</strong> Follow <a href="online-serving/">Online serving</a> to
+   start a GPU or NPU service and send an OpenAI-compatible Beam request.</li>
 </ol>
 <h2 id="explore-the-repository">Explore the repository<a class="headerlink" href="#explore-the-repository" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://github.com/JiusiServe/vllm-gr/blob/main/examples/offline_inference/beam_search/README.md">Offline Beam Search examples</a>
   cover artifact preparation and the <code>GRLLM.beam_search_v1()</code> entry point.</li>
-<li><a href="https://github.com/JiusiServe/vllm-gr/blob/main/examples/online_serving/beam_search/README.md">Online serving examples</a>
-  cover server configuration and OpenAI-compatible requests.</li>
+<li><a href="online-serving/">Online serving</a> covers persistent artifacts, server
+  configuration, HTTP requests and response interpretation.</li>
 <li><a href="https://github.com/JiusiServe/vllm-gr/blob/main/docs/benchmarks/README.md">Benchmark guide</a>
   describes the datasets, measurements and acceptance checks.</li>
 </ul>

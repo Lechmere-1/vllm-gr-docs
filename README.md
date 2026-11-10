@@ -9,11 +9,12 @@ the vLLM-GR documentation preview:
 - CUDA GPU installation
 - Ascend NPU installation
 - First offline inference (CUDA and Ascend NPU)
+- Online serving (CUDA and Ascend NPU)
 
 The installation guides originate from [JiusiServe/vllm-gr](https://github.com/JiusiServe/vllm-gr)
 at `c4966f18a11a0aca9f05bda2e270c634c342f868`. The preview adds a homepage,
 navigation and styling, adapts links for a standalone documentation site, and
-adds a first-inference tutorial checked against that source revision.
+adds offline and online tutorials checked against that source revision.
 It is a documentation preview, not a separate release of the inference framework.
 
 Project documentation is distributed under the original Apache-2.0 license;
