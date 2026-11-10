@@ -1,0 +1,1448 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Generative recommendation inference on vLLM">
+      
+      
+      
+        <link rel="canonical" href="https://lechmere-1.github.io/vllm-gr-docs/parameter-reference/">
+      
+      
+        <link rel="prev" href="../online-serving/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Beam parameters and modes - vLLM-GR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#beam-parameters-and-modes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="vLLM-GR" class="md-header__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            vLLM-GR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Beam parameters and modes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../online-serving/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="vLLM-GR" class="md-nav__button md-logo" aria-label="vLLM-GR" data-md-component="logo">
+      
+  <img src="../assets/vLLM-GR.png" alt="logo">
+
+    </a>
+    vLLM-GR
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JiusiServe/vllm-gr" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vllm-gr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CUDA GPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart-ascend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ascend NPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First offline inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../online-serving/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Online serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam parameters and modes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Beam parameters and modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-candidates-retained-width-and-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity, candidates, retained width, and results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-set-each-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to set each parameter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to set each parameter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engine-startup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine startup configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-request-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-request parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-demo-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline demo arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#count-generation-steps-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count generation steps correctly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-narrowing-and-widening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic narrowing and widening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match-npu-graph-shapes-to-decode-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Match NPU graph shapes to Decode inputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#candidate-width-and-platform-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Candidate-width and platform limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-the-generation-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the generation mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-candidates-retained-width-and-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity, candidates, retained width, and results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-set-each-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to set each parameter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to set each parameter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engine-startup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine startup configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-request-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-request parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-demo-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline demo arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#count-generation-steps-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count generation steps correctly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-narrowing-and-widening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic narrowing and widening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match-npu-graph-shapes-to-decode-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Match NPU graph shapes to Decode inputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#candidate-width-and-platform-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Candidate-width and platform limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-the-generation-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the generation mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="beam-parameters-and-modes">Beam parameters and modes<a class="headerlink" href="#beam-parameters-and-modes" title="Permanent link">&para;</a></h1>
+<p>Use this reference after <a href="../first-inference/">First offline inference</a> or
+<a href="../online-serving/">Online serving</a>. Start with one prompt, capacity 128,
+three SID components, and the matching platform configuration, then change one
+setting at a time.</p>
+<p>This page describes the vLLM-GR 0.30 source used by these guides. A field being
+accepted by the configuration parser does not mean every accelerator supports
+every combination. Device-specific limits are called out below.</p>
+<h2 id="capacity-candidates-retained-width-and-results">Capacity, candidates, retained width, and results<a class="headerlink" href="#capacity-candidates-retained-width-and-results" title="Permanent link">&para;</a></h2>
+<p>These four quantities serve different purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capacity <code>W</code></td>
+<td>Engine storage and request capacity, configured by <code>beam.max_width</code>. Request <code>beam_width</code> must equal it.</td>
+</tr>
+<tr>
+<td>Candidates <code>K</code></td>
+<td>How many token candidates each parent Beam can contribute before global selection.</td>
+</tr>
+<tr>
+<td>Retained width <code>w_t</code></td>
+<td>How many winning prefixes survive after generated component <code>t</code>. A dynamic schedule sets one value per component.</td>
+</tr>
+<tr>
+<td>Result limit <code>R</code></td>
+<td>Maximum final sequences returned to the caller. It does not reduce earlier search widths.</td>
+</tr>
+</tbody>
+</table>
+<p>At each stage, candidate children compete globally to fill the retained width.
+One parent can contribute several winners, and another can contribute none.
+Limiting candidates per parent does not guarantee that every parent survives.
+The selected children carry their parent indices into KV inheritance and
+reordering, so each next-step prefix reads the history of its selected parent.</p>
+<p>In the fixed-width default, <code>w_t = W</code> and the candidate count follows that width.
+For a dynamic schedule with candidate width left unset, candidate selection
+follows the current stage's retained width. An explicitly configured scalar
+<code>candidate_width</code> fixes the candidate count instead, unless a supported
+per-stage per-parent schedule overrides it. Check the platform limits below.</p>
+<p>Reducing <code>result_width</code> limits the final returned set. Reducing
+<code>--print-beams</code> only prints fewer records in the offline demo. Neither option
+is a substitute for narrowing the search schedule.</p>
+<h2 id="where-to-set-each-parameter">Where to set each parameter<a class="headerlink" href="#where-to-set-each-parameter" title="Permanent link">&para;</a></h2>
+<h3 id="engine-startup-configuration">Engine startup configuration<a class="headerlink" href="#engine-startup-configuration" title="Permanent link">&para;</a></h3>
+<p>Change these in the YAML passed to <code>--vllm-gr-config</code>, or in the Python
+<code>vllm_gr_config</code> mapping, before constructing the engine:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>beam.execution_mode</code></td>
+<td>Use <code>v1</code> for <code>beam_search_v1()</code>.</td>
+</tr>
+<tr>
+<td><code>beam.max_width</code></td>
+<td>Match every request's <code>beam_width</code> or HTTP <code>n</code>. The guides use 128.</td>
+</tr>
+<tr>
+<td><code>beam.max_decode_steps</code></td>
+<td>Must cover the effective generation budget, including the first component produced by Prefill.</td>
+</tr>
+<tr>
+<td><code>beam.worker_decision</code></td>
+<td>Keep <code>true</code> for the V1 path.</td>
+</tr>
+<tr>
+<td><code>constraint_table.candidate_width</code></td>
+<td>Optional engine-wide scalar <code>K</code>; leave unset for the NPU examples here.</td>
+</tr>
+<tr>
+<td><code>constraint_table.max_top_k</code></td>
+<td>Candidate storage limit; must cover the candidate counts required by the chosen execution path.</td>
+</tr>
+<tr>
+<td><code>beam.graph_enabled</code></td>
+<td>Enable the Beam Decode graph path; this is separate from Prefill graph controls.</td>
+</tr>
+<tr>
+<td><code>beam.graph_batch_size</code></td>
+<td>Exact NPU logical batch size for Beam Decode graph replay.</td>
+</tr>
+<tr>
+<td><code>beam.graph_widths</code></td>
+<td>Additional exact NPU Decode input widths to capture.</td>
+</tr>
+<tr>
+<td><code>beam.online_batch_sizes</code></td>
+<td>Policy for supported HTTP prompt-list batch sizes, not the request's Beam width. The online guide starts with <code>[1]</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The artifact path, artifact digest, tokenizer digest, and device backend must
+describe the same model/tokenizer and constraint table. Do not mix canonical
+configuration with legacy catalog or Beam CLI overrides.</p>
+<h3 id="per-request-parameters">Per-request parameters<a class="headerlink" href="#per-request-parameters" title="Permanent link">&para;</a></h3>
+<p>Python uses <code>vllm_gr.sampling_params.BeamSearchParams</code>. HTTP uses the fields
+below with <code>use_beam_search: true</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Python field</th>
+<th>HTTP field</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>beam_width</code></td>
+<td><code>n</code></td>
+<td>Must equal engine <code>beam.max_width</code>, even with a dynamic schedule.</td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td><code>max_tokens</code></td>
+<td>Public generation budget, including configured begin/end positions.</td>
+</tr>
+<tr>
+<td><code>begin_token</code>, <code>end_token</code></td>
+<td>Inside <code>vllm_xargs</code></td>
+<td>Use boundary tokens present in the checkpoint's tokenizer.</td>
+</tr>
+<tr>
+<td><code>dynamic_beam_widths</code></td>
+<td><code>vllm_xargs.dynamic_beam_widths</code></td>
+<td>One retained width per effective generation step, each between 1 and capacity.</td>
+</tr>
+<tr>
+<td><code>result_width</code></td>
+<td><code>vllm_xargs.result_width</code></td>
+<td>Between 1 and the final retained width; defaults to that final width.</td>
+</tr>
+<tr>
+<td><code>per_parent_beam_widths</code></td>
+<td><code>vllm_xargs.per_parent_beam_widths</code></td>
+<td>Per-stage candidate counts; currently CUDA-only.</td>
+</tr>
+<tr>
+<td><code>ignore_eos</code></td>
+<td><code>ignore_eos</code></td>
+<td>V1 uses a fixed budget. Set <code>true</code> in Python; the online entry supplies <code>true</code> itself.</td>
+</tr>
+<tr>
+<td><code>length_penalty</code></td>
+<td><code>length_penalty</code></td>
+<td>Final ranking control, separate from search capacity and candidate count.</td>
+</tr>
+</tbody>
+</table>
+<p>For the canonical Constraint Table path, leave <code>catalog_strategy</code> unset.
+The Worker-side table controls candidate validity.</p>
+<h3 id="offline-demo-arguments">Offline demo arguments<a class="headerlink" href="#offline-demo-arguments" title="Permanent link">&para;</a></h3>
+<p>The standalone <code>offline_beam_search_v1.py</code> builds the engine configuration as
+well as the request. Its argument names are not identical to the Python API:</p>
+<table>
+<thead>
+<tr>
+<th>CLI argument</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--beam-width</code></td>
+<td>Sets both engine capacity and request width.</td>
+</tr>
+<tr>
+<td><code>--generated-steps</code></td>
+<td>Effective SID steps, with choices 1, 2, or 3.</td>
+</tr>
+<tr>
+<td><code>--candidate-width</code></td>
+<td>Sets the engine's scalar candidate count; it is not the thinking sampler's <code>--top-k</code>.</td>
+</tr>
+<tr>
+<td><code>--dynamic-beam-widths</code></td>
+<td>Per-stage retained widths; this demo currently exposes this option only for NPU.</td>
+</tr>
+<tr>
+<td><code>--result-width</code></td>
+<td>Final return limit; this demo currently exposes this option only for NPU.</td>
+</tr>
+<tr>
+<td><code>--execution eager/graph</code></td>
+<td>NPU execution selection; it does not switch CUDA to eager mode.</td>
+</tr>
+<tr>
+<td><code>--input-len</code></td>
+<td>Prepares a fixed-length prompt for direct SID Beam, including the appended begin token.</td>
+</tr>
+<tr>
+<td><code>--print-beams</code></td>
+<td>Display limit for the returned records.</td>
+</tr>
+</tbody>
+</table>
+<p>In direct SID Beam mode, the script sets public <code>max_tokens</code> to
+<code>--generated-steps + 2</code> and Beam temperature to <code>0.0</code>. Its <code>--max-tokens</code>,
+<code>--temperature</code>, <code>--top-p</code>, and <code>--top-k</code> arguments control thinking generation,
+not direct SID Beam selection. There is no demo CLI flag for
+<code>per_parent_beam_widths</code>; use the Python or HTTP interface on CUDA.</p>
+<h2 id="count-generation-steps-correctly">Count generation steps correctly<a class="headerlink" href="#count-generation-steps-correctly" title="Permanent link">&para;</a></h2>
+<p>The effective generation budget is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>N = max_tokens - configured_begin_position - configured_end_position
+</code></pre></div>
+<p>Each configured boundary reserves one position. With both OneRec markers,
+<code>max_tokens=5</code> means <code>N=3</code>: Prefill selects A, then two Decode forwards select
+B and C. A surviving fixed-length result receives its configured end marker
+during output conversion; the marker is not another sampled Decode step.</p>
+<p>The <code>constraint_table_v1</code> path supports effective budgets 1 through 3. Use
+three components for the complete A/B/C SID example. A one-step run finishes
+in Prefill and should not be expected to report a Decode graph replay.</p>
+<p>Increasing <code>beam.max_decode_steps</code> alone does not extend the constraint table's
+depth. The current NPU full-vocabulary Beam path also supports only 1 through 3
+steps; do not infer longer-step support from ordinary LLM generation.</p>
+<h2 id="dynamic-narrowing-and-widening">Dynamic narrowing and widening<a class="headerlink" href="#dynamic-narrowing-and-widening" title="Permanent link">&para;</a></h2>
+<p>Keep engine and request capacity at 128. Both of these schedules fit within
+that capacity:</p>
+<table>
+<thead>
+<tr>
+<th>Schedule</th>
+<th style="text-align: right;">After Prefill: A</th>
+<th style="text-align: right;">After Decode 1: B</th>
+<th style="text-align: right;">After Decode 2: C</th>
+<th style="text-align: right;">Example return limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Narrowing</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr>
+<td>Widening</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">16</td>
+</tr>
+</tbody>
+</table>
+<p>Each value is a retained prefix count, not a new engine capacity. Expanding a
+later stage creates more children of the surviving parents; it cannot recover
+prefixes already pruned at an earlier stage. Different schedules can change
+rankings and recommendation quality.</p>
+<p>The examples below reuse the exported <code>MODEL</code>, <code>CATALOG</code>, and <code>PROMPT</code> paths
+from <a href="../first-inference/">First offline inference</a>. They leave scalar
+<code>candidate_width</code> unset and use the NPU demo's graph configuration:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Narrowing</label><label for="__tabbed_1_2">Widening</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-u<span class="w"> </span>examples/offline_inference/beam_search/offline_beam_search_v1.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--model<span class="w"> </span><span class="s2">"</span><span class="nv">$MODEL</span><span class="s2">"</span><span class="w"> </span>--catalog<span class="w"> </span><span class="s2">"</span><span class="nv">$CATALOG</span><span class="s2">"</span><span class="w"> </span>--prompt<span class="w"> </span><span class="s2">"</span><span class="nv">$PROMPT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--constraint-backend<span class="w"> </span>npu<span class="w"> </span>--execution<span class="w"> </span>graph<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--batch-size<span class="w"> </span><span class="m">1</span><span class="w"> </span>--beam-width<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--input-len<span class="w"> </span><span class="m">128</span><span class="w"> </span>--generated-steps<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--dynamic-beam-widths<span class="w"> </span><span class="m">128</span>,64,32<span class="w"> </span>--result-width<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--print-beams<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-u<span class="w"> </span>examples/offline_inference/beam_search/offline_beam_search_v1.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--model<span class="w"> </span><span class="s2">"</span><span class="nv">$MODEL</span><span class="s2">"</span><span class="w"> </span>--catalog<span class="w"> </span><span class="s2">"</span><span class="nv">$CATALOG</span><span class="s2">"</span><span class="w"> </span>--prompt<span class="w"> </span><span class="s2">"</span><span class="nv">$PROMPT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--constraint-backend<span class="w"> </span>npu<span class="w"> </span>--execution<span class="w"> </span>graph<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--batch-size<span class="w"> </span><span class="m">1</span><span class="w"> </span>--beam-width<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--input-len<span class="w"> </span><span class="m">128</span><span class="w"> </span>--generated-steps<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--dynamic-beam-widths<span class="w"> </span><span class="m">32</span>,64,128<span class="w"> </span>--result-width<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--print-beams<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Python and HTTP support retained-width schedules on CUDA as well as NPU.
+The demo's NPU-only CLI restriction is not a CUDA engine limitation.</p>
+<h2 id="match-npu-graph-shapes-to-decode-inputs">Match NPU graph shapes to Decode inputs<a class="headerlink" href="#match-npu-graph-shapes-to-decode-inputs" title="Permanent link">&para;</a></h2>
+<p>A three-component schedule has only two Decode input widths:</p>
+<table>
+<thead>
+<tr>
+<th>Retained schedule</th>
+<th>Decode input widths</th>
+<th>Suggested <code>beam.graph_widths</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[128, 64, 32]</code></td>
+<td>128, then 64</td>
+<td><code>[64, 128]</code></td>
+</tr>
+<tr>
+<td><code>[32, 64, 128]</code></td>
+<td>32, then 64</td>
+<td><code>[32, 64]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The last retained width has no following model forward. NPU graph matching
+uses logical batch size and input width together, so a B=1 capture does not
+establish B=4 replay. The maximum-capacity width is included implicitly; the
+configuration allows at most eight distinct width captures including it.
+More captures increase startup and device-memory requirements.</p>
+<p>The offline demo derives its graph widths from the schedule. When editing an
+online configuration yourself, set the matching <code>graph_batch_size</code> and
+<code>graph_widths</code> before restarting. For NPU graph execution, also set
+<code>graph_enabled: true</code> and remove <code>--enforce-eager</code>, as shown in
+<a href="../online-serving/#3-start-the-server">Online serving</a>.</p>
+<p>A graph fallback counter means the Beam FULL graph was not used; it does not
+exclusively count eager forwards. Prefill capture has separate controls and
+shape restrictions. Use execution diagnostics or profiles to establish what
+actually replayed, and validate numerical behavior separately.</p>
+<h2 id="candidate-width-and-platform-limits">Candidate-width and platform limits<a class="headerlink" href="#candidate-width-and-platform-limits" title="Permanent link">&para;</a></h2>
+<p>On CUDA, <code>per_parent_beam_widths</code> sets one candidate count per effective step.
+The first must equal the first retained width. At each later step, the retained
+width cannot exceed the previous retained width times the per-parent candidate
+count. These are candidate limits, not a guarantee of one winner per parent.</p>
+<p>The configuration schema has a global capacity ceiling of 1024 and candidate
+ceiling of 256. Capacity above 256 requires an explicitly configured candidate
+width at or below 256. These numeric ceilings are not a claim that every NPU
+shape or CUDA workload has been validated on hardware.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>CUDA V1</th>
+<th>NPU V1 in this source version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Three-component catalog-constrained Beam</td>
+<td>Supported</td>
+<td>Supported</td>
+</tr>
+<tr>
+<td>Dynamic retained widths and final result limit</td>
+<td>Python/HTTP interfaces</td>
+<td>Python/HTTP and the standalone demo</td>
+</tr>
+<tr>
+<td>Independent scalar candidate count</td>
+<td>Supported within the configured limits</td>
+<td>Keep unset; the NPU path requires candidate and retained widths to agree.</td>
+</tr>
+<tr>
+<td>Per-stage <code>per_parent_beam_widths</code></td>
+<td>Supported within request and engine limits</td>
+<td>Not supported</td>
+</tr>
+<tr>
+<td>Multi-Trie request selection</td>
+<td>Separate CUDA configuration</td>
+<td>Not supported</td>
+</tr>
+</tbody>
+</table>
+<p>An explicit scalar <code>candidate_width</code> must fit the candidate storage and
+<code>max_logprobs</code> budget. For a dynamic retained-width schedule without a per-stage
+candidate override, it must be at least every retained width. On NPU, leave it
+unset for changing retained widths; setting a fixed candidate count is not a way
+to enable independent candidate selection there.</p>
+<h2 id="choose-the-generation-mode">Choose the generation mode<a class="headerlink" href="#choose-the-generation-mode" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What it generates</th>
+<th>How to select it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Catalog-constrained SID Beam</td>
+<td>Prefixes that follow the supplied catalog table</td>
+<td>Use the enabled canonical Constraint Table in the offline/online guides.</td>
+</tr>
+<tr>
+<td>Full-vocabulary Beam</td>
+<td>Model-vocabulary tokens, without catalog membership guarantees</td>
+<td>Use the public Python Beam API with <code>constrained_generation: false</code> and a disabled table.</td>
+</tr>
+<tr>
+<td>Catalog-free SID stage domains</td>
+<td>A, then B, then C token families, without validating the combined item</td>
+<td>On NPU, add <code>beam.sid_stage_vocab: true</code> to the unconstrained configuration.</td>
+</tr>
+<tr>
+<td>Thinking only</td>
+<td>Ordinary LLM generation, without a SID Beam phase</td>
+<td>The demo's <code>--enable-thinking</code> mode.</td>
+</tr>
+<tr>
+<td>Thinking followed by SID Beam</td>
+<td>A thinking continuation, then constrained SID search</td>
+<td>The demo's <code>--cot</code> mode and a compatible model/tokenizer/catalog.</td>
+</tr>
+</tbody>
+</table>
+<p><code>--cot</code> and <code>--enable-thinking</code> are mutually exclusive. Their thinking budget
+and sampler settings are separate from the SID Beam budget. A model must
+support the intended thinking behavior; selecting a mode does not add that
+capability to arbitrary weights.</p>
+<p>The current NPU unconstrained path uses ModelRunner V1, FP16/BF16, asynchronous
+scheduling, and single-device parallelism. The SID stage domain is limited to
+three components. See the
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/docs/npu_unconstrained_beam.md">NPU unconstrained Beam guide</a>
+for its complete configuration and scoring contract.</p>
+<p>For the source behind this reference, see
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/sampling_params.py">request parameters</a>,
+<a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/vllm_gr/config/models.py">configuration definitions</a>,
+and the <a href="https://github.com/JiusiServe/vllm-gr/blob/c4966f18a11a0aca9f05bda2e270c634c342f868/examples/offline_inference/beam_search/offline_beam_search_v1.py">standalone demo</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../online-serving/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Online serving">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Online serving
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright contributors to the vLLM-GR project
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "content.code.copy", "search.suggest", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
